@@ -1,11 +1,11 @@
-package com.example.flightsearch.data
+package com.example.flightsearch.data.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "airport")
-data class Airport(
+data class AirportEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 

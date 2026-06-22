@@ -1,11 +1,11 @@
-package com.example.flightsearch.data
+package com.example.flightsearch.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Airport::class, Favorite::class], version = 1, exportSchema = false)
+@Database(entities = [AirportEntity::class, FavoriteEntity::class], version = 1, exportSchema = false)
 abstract class FlightSearchDataBase : RoomDatabase() {
     abstract fun FSearchDao(): FSearchDao
 
