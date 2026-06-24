@@ -13,3 +13,7 @@ fun AirportEntity.toDomain(): Airport {
 
 
 }
+
+fun List<AirportEntity>.toDomain(): List<Airport> {
+    return this.map { it.toDomain() }
+}
