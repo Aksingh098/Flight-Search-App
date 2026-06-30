@@ -22,7 +22,7 @@ fun FlightSearchApp(){
 
         }
     ) {innerpadding->
-        Box(modifier = Modifier.padding(innerpadding))
+        FlightSearchScreen(modifier = Modifier.padding(innerpadding))
 
     }
 
