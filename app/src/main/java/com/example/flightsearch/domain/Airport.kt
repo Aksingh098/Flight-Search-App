@@ -6,3 +6,10 @@ data class Airport(
     val iataCode: String,
     val passengerCount: Int
 )
+
+data class FlightRoute(
+    val departureCode: String,
+    val departureName: String,
+    val destinationCode: String,
+    val destinationName: String
+)

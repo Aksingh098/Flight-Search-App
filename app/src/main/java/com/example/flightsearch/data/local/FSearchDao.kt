@@ -17,4 +17,7 @@ interface FSearchDao {
 
     @Query("SELECT * FROM airport WHERE iata_code != :departureCode ORDER BY passengers DESC")
     fun getAllDestinations(departureCode: String): Flow<List<AirportEntity>>
+
+    @Query("SELECT * FROM airport WHERE iata_code = :departureCode LIMIT 1")
+    fun getSelectedAirport(departureCode: String): Flow<AirportEntity>
 }

@@ -1,5 +1,6 @@
 package com.example.flightsearch.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
@@ -97,7 +98,7 @@ fun FlightSearchScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                //.clickable { viewModel.onSearchQueryChange(airport.iataCode) }
+                                .clickable{viewModel.onAirportSelected(airport.iataCode)}
                                 .padding(vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -118,8 +119,26 @@ fun FlightSearchScreen(
 
             }
         }
+        if(!uiState.searchExpanded && uiState.hasExecutedSearch){
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+                items(uiState.flightResults){route ->
+                    AirportCard(
+                        destinationName = route.destinationName,
+                        departureName = route.departureName,
+                        destinationCode = route.destinationCode,
+                        departureCode = route.departureCode
+                    )
 
-    }
+                }
+            }
+
+
+            }
+        }
+
 
 
 
