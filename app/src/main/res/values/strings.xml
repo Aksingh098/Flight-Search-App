@@ -2,4 +2,6 @@
     <string name="app_name">Flight Search</string>
     <string name="searchbar_placeholder">Search Airports....</string>
     <string name="searchbar_clear">Clear</string>
+    <string name="arrival">ARRIVAL</string>
+    <string name="depart">DEPART</string>
 </resources>

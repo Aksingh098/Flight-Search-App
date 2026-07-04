@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface FSearchRepository {
     fun autoSuggestion(searchedQuery: String): Flow<List<AirportEntity>>
 
+    fun getAllDestination(departureCode: String) : Flow<List<AirportEntity>>
 }

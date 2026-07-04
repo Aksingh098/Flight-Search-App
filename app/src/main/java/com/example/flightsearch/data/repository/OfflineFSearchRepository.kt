@@ -6,5 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 class OfflineFSearchRepository(private val searchDao: FSearchDao): FSearchRepository {
     override fun autoSuggestion(searchedQuery: String): Flow<List<AirportEntity>> = searchDao.autoSuggestion(searchedQuery)
+    override fun getAllDestination(departureCode: String): Flow<List<AirportEntity>>  = searchDao.getAllDestinations(departureCode)
 
 }

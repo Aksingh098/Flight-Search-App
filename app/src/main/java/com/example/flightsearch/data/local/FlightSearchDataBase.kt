@@ -13,7 +13,7 @@ abstract class FlightSearchDataBase : RoomDatabase() {
         @Volatile
         private var Instance: FlightSearchDataBase? = null
 
-        fun getDatabase(context: Context): FlightSearchDataBase {
+        fun getDatabase(context: Context):  FlightSearchDataBase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, FlightSearchDataBase::class.java, "flight_database")
                     .createFromAsset("database/flight_search.db")

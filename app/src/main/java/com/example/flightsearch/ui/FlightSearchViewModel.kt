@@ -39,7 +39,6 @@ class FlightSearchViewModel(
         }
 
 
-
     val uiState: StateFlow<FlightSearchUiState> = combine(
         _searchQuery,
         _searchExpanded,
