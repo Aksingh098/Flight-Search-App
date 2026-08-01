@@ -5,7 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [AirportEntity::class, FavoriteEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [AirportEntity::class, FavoriteEntity::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class FlightSearchDataBase : RoomDatabase() {
     abstract fun FSearchDao(): FSearchDao
 
@@ -13,7 +17,7 @@ abstract class FlightSearchDataBase : RoomDatabase() {
         @Volatile
         private var Instance: FlightSearchDataBase? = null
 
-        fun getDatabase(context: Context):  FlightSearchDataBase {
+        fun getDatabase(context: Context): FlightSearchDataBase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, FlightSearchDataBase::class.java, "flight_database")
                     .createFromAsset("database/flight_search.db")

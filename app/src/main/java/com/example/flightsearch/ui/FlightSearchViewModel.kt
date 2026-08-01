@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.update
 
 class FlightSearchViewModel(
     private val repository: FSearchRepository
-) : ViewModel(){
+) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
     private val _searchExpanded = MutableStateFlow(false)
@@ -37,7 +37,7 @@ class FlightSearchViewModel(
     private val _suggestionFlow = _searchQuery
         .debounce(300L)
         .distinctUntilChanged()
-        .flatMapLatest { query->
+        .flatMapLatest { query ->
             repository.autoSuggestion(query)
 
         }
@@ -45,12 +45,12 @@ class FlightSearchViewModel(
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     private val _flightResultsFlow = _selectedAirportCode
         .flatMapLatest { code ->
-            if(code.isNullOrBlank()){
+            if (code.isNullOrBlank()) {
                 flowOf(emptyList())
-            }else{
+            } else {
                 repository.getSelectedAirport(code)
-                    .combine(repository.getAllDestination(code)){departure, destinations ->
-                        destinations.map{dest->
+                    .combine(repository.getAllDestination(code)) { departure, destinations ->
+                        destinations.map { dest ->
                             FlightRoute(
                                 departureCode = departure.iataCode,
                                 departureName = departure.name,
@@ -72,7 +72,7 @@ class FlightSearchViewModel(
         _searchExpanded,
         _suggestionFlow,
         _flightResultsFlow
-    ){ query, expanded, suggestions, results ->
+    ) { query, expanded, suggestions, results ->
         FlightSearchUiState(
             searchedQuery = query,
             searchExpanded = expanded,
@@ -86,14 +86,13 @@ class FlightSearchViewModel(
         initialValue = FlightSearchUiState()
     )
 
-    fun expandChange( expand: Boolean){
+    fun expandChange(expand: Boolean) {
         _searchExpanded.value = expand
 
     }
 
-    fun onSearchQueryChange(query: String){
+    fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
-
 
 
     }
@@ -104,7 +103,12 @@ class FlightSearchViewModel(
         _searchExpanded.value = false
     }
 
-    companion object{
+    fun favoriteButton(it: Boolean): Boolean {
+        return it
+    }
+
+
+    companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as FSearchApplication)

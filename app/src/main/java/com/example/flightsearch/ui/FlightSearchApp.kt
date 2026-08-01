@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun FlightSearchApp(){
+fun FlightSearchApp() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -21,7 +21,7 @@ fun FlightSearchApp(){
 
 
         }
-    ) {innerpadding->
+    ) { innerpadding ->
         FlightSearchScreen(modifier = Modifier.padding(innerpadding))
 
     }
@@ -31,7 +31,7 @@ fun FlightSearchApp(){
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun SearchTopAppBar(){
+fun SearchTopAppBar() {
     TopAppBar(
         title = {
             Text(

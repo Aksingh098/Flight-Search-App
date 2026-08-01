@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,17 +51,17 @@ fun FlightSearchScreen(
     Column(
         modifier = modifier
     ) {
-        Box(modifier = Modifier.fillMaxWidth()){
+        Box(modifier = Modifier.fillMaxWidth()) {
             SearchBar(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 8.dp),
                 expanded = uiState.searchExpanded,
-                onExpandedChange = {viewModel.expandChange(it)},
+                onExpandedChange = { viewModel.expandChange(it) },
                 inputField = {
                     SearchBarDefaults.InputField(
                         query = uiState.searchedQuery,
-                        onQueryChange = {newQuery ->
+                        onQueryChange = { newQuery ->
                             viewModel.onSearchQueryChange(newQuery)
 
                         },
@@ -66,7 +69,7 @@ fun FlightSearchScreen(
                             viewModel.expandChange(false)
                         },
                         expanded = uiState.searchExpanded,
-                        onExpandedChange = {viewModel.expandChange(it)},
+                        onExpandedChange = { viewModel.expandChange(it) },
                         placeholder = { Text(stringResource(R.string.searchbar_placeholder)) },
                         leadingIcon = {
                             Icon(
@@ -75,7 +78,7 @@ fun FlightSearchScreen(
                             )
                         },
                         trailingIcon = {
-                            if(uiState.searchExpanded && uiState.searchedQuery.isNotEmpty()){
+                            if (uiState.searchExpanded && uiState.searchedQuery.isNotEmpty()) {
                                 IconButton(
                                     onClick = { viewModel.onSearchQueryChange("") }
                                 ) {
@@ -89,16 +92,16 @@ fun FlightSearchScreen(
                     )
                 }
 
-            ){
+            ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(16.dp)
                 ) {
-                    items(uiState.airportSuggestion.take(7  )) { airport ->
+                    items(uiState.airportSuggestion.take(7)) { airport ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable{viewModel.onAirportSelected(airport.iataCode)}
+                                .clickable { viewModel.onAirportSelected(airport.iataCode) }
                                 .padding(vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -119,27 +122,26 @@ fun FlightSearchScreen(
 
             }
         }
-        if(!uiState.searchExpanded && uiState.hasExecutedSearch){
+        if (!uiState.searchExpanded && uiState.hasExecutedSearch) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(uiState.flightResults){route ->
+                items(uiState.flightResults) { route ->
                     AirportCard(
                         destinationName = route.destinationName,
                         departureName = route.departureName,
                         destinationCode = route.destinationCode,
-                        departureCode = route.departureCode
+                        departureCode = route.departureCode,
+                        isFilled = true
                     )
 
                 }
             }
 
 
-            }
         }
-
-
+    }
 
 
 }
@@ -150,8 +152,9 @@ fun AirportCard(
     departureName: String,
     destinationCode: String,
     destinationName: String,
+    isFilled: Boolean,
     modifier: Modifier = Modifier
-){
+) {
     ElevatedCard(
         elevation = CardDefaults.elevatedCardElevation(
             defaultElevation = 6.dp
@@ -160,24 +163,43 @@ fun AirportCard(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.SpaceAround
-
+        Row(
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                stringResource(R.string.depart),
-                style = MaterialTheme.typography.labelLarge
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.SpaceAround
+
+            ) {
+
+                Text(
+                    stringResource(R.string.depart),
+                    style = MaterialTheme.typography.labelLarge
+                )
+
+                AirportName(departureCode, departureName)
+
+                Text(
+                    stringResource(R.string.arrival),
+                    style = MaterialTheme.typography.labelLarge
+                )
+                AirportName(destinationCode, destinationName)
+
+
+
+            }
+            Icon(
+                imageVector = if(isFilled) Icons.Filled.Star else Icons.Outlined.Star,
+                contentDescription = if(isFilled)"Remove from Favorites" else "Add to Favorites",
+                tint = if(isFilled) Color(0xFFFFD700) else Color.Gray
             )
 
-            AirportName(departureCode,departureName)
 
-            Text(
-                stringResource(R.string.arrival),
-                style = MaterialTheme.typography.labelLarge
-            )
-            AirportName(destinationCode,destinationName)
         }
+
     }
 
 }
@@ -187,7 +209,7 @@ fun AirportName(
     code: String,
     name: String,
     modifier: Modifier = Modifier
-){
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -214,7 +236,8 @@ fun AirportCardPreview() {
             departureCode = "OSL",
             departureName = "Oslo Airport",
             destinationCode = "LIS",
-            destinationName = "Humberto Diegado Airport"
+            destinationName = "Humberto Diegado Airport",
+            isFilled = false
         )
     }
 }

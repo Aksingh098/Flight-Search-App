@@ -8,9 +8,9 @@ interface AppContainer {
     val fSearchRepository: FSearchRepository
 }
 
-class DefaultAppContainer(private val context: Context) : AppContainer{
+class DefaultAppContainer(private val context: Context) : AppContainer {
 
-    override val fSearchRepository: FSearchRepository by lazy{
+    override val fSearchRepository: FSearchRepository by lazy {
         FlightSearchDataBase.getDatabase(context).FSearchDao().let { fSearchDao ->
             OfflineFSearchRepository(fSearchDao)
         }
