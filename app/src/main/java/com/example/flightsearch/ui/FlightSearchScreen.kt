@@ -133,7 +133,10 @@ fun FlightSearchScreen(
                         departureName = route.departureName,
                         destinationCode = route.destinationCode,
                         departureCode = route.departureCode,
-                        isFilled = true
+                        isFilled = route.isFavorite,
+                        onFavoriteClick = viewModel::onFavoriteClick
+
+
                     )
 
                 }
@@ -141,10 +144,12 @@ fun FlightSearchScreen(
 
 
         }
+
+        }
     }
 
 
-}
+
 
 @Composable
 fun AirportCard(
@@ -152,6 +157,7 @@ fun AirportCard(
     departureName: String,
     destinationCode: String,
     destinationName: String,
+    onFavoriteClick:(departureCode:String,  destinationCode:String) -> Unit,
     isFilled: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -191,11 +197,15 @@ fun AirportCard(
 
 
             }
-            Icon(
-                imageVector = if(isFilled) Icons.Filled.Star else Icons.Outlined.Star,
-                contentDescription = if(isFilled)"Remove from Favorites" else "Add to Favorites",
-                tint = if(isFilled) Color(0xFFFFD700) else Color.Gray
-            )
+            IconButton(
+                onClick = {onFavoriteClick(departureCode,destinationCode)}
+            ) {
+                Icon(
+                    imageVector = if(isFilled) Icons.Filled.Star else Icons.Outlined.Star,
+                    contentDescription = if(isFilled) "Remove from favorites" else "Add to favorites",
+                    tint = if (isFilled) Color(0xFFFFD700) else Color.Gray
+                )
+            }
 
 
         }
@@ -228,16 +238,3 @@ fun AirportName(
 }
 
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun AirportCardPreview() {
-    FlightSearchTheme {
-        AirportCard(
-            departureCode = "OSL",
-            departureName = "Oslo Airport",
-            destinationCode = "LIS",
-            destinationName = "Humberto Diegado Airport",
-            isFilled = false
-        )
-    }
-}

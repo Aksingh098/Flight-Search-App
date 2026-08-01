@@ -7,8 +7,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.flightsearch.FSearchApplication
+import com.example.flightsearch.data.local.FavoriteEntity
 import com.example.flightsearch.data.repository.FSearchRepository
+import com.example.flightsearch.data.toAirportDomain
 import com.example.flightsearch.data.toDomain
+import com.example.flightsearch.data.toFavoriteDomain
 import com.example.flightsearch.domain.FlightRoute
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -23,6 +26,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class FlightSearchViewModel(
     private val repository: FSearchRepository
@@ -30,6 +34,8 @@ class FlightSearchViewModel(
 
     private val _searchQuery = MutableStateFlow("")
     private val _searchExpanded = MutableStateFlow(false)
+
+
 
     private val _selectedAirportCode = MutableStateFlow<String?>(null)
 
@@ -66,19 +72,30 @@ class FlightSearchViewModel(
 
         }
 
+    private val _favoriteFlow = repository.getFavorites()
+
 
     val uiState: StateFlow<FlightSearchUiState> = combine(
         _searchQuery,
         _searchExpanded,
         _suggestionFlow,
-        _flightResultsFlow
-    ) { query, expanded, suggestions, results ->
+        _flightResultsFlow,
+        _favoriteFlow
+    ) { query, expanded, suggestions, results,favorites ->
+        val updatedResults = results.map{route ->
+            val isFavorite = favorites.any{favorite ->
+                favorite.departureCode == route.departureCode && favorite.destinationCode == route.destinationCode
+            }
+            route.copy(isFavorite =isFavorite)
+
+        }
         FlightSearchUiState(
             searchedQuery = query,
             searchExpanded = expanded,
-            airportSuggestion = suggestions.toDomain(),
-            flightResults = results,
-            hasExecutedSearch = _selectedAirportCode.value != null
+            airportSuggestion = suggestions.toAirportDomain(),
+            flightResults = updatedResults,
+            hasExecutedSearch = _selectedAirportCode.value != null,
+            favorites = favorites.toFavoriteDomain()
         )
     }.stateIn(
         scope = viewModelScope,
@@ -97,15 +114,39 @@ class FlightSearchViewModel(
 
     }
 
+
+    fun onFavoriteClick(departureCode: String, destinationCode: String){
+        viewModelScope.launch {
+            val isCurrentFavorite = uiState.value.favorites.any{favorite ->
+                favorite.departureCode == departureCode && favorite.destinationCode == destinationCode
+
+            }
+
+            if(isCurrentFavorite){
+                repository.deleteFavorite(departureCode,destinationCode)
+            }else{
+                repository.addFavorite(
+                    favorite = FavoriteEntity(
+                        id = 0,
+                        departureCode = departureCode,
+                        destinationCode = destinationCode
+
+                    )
+                )
+
+            }
+        }
+
+
+    }
+
     fun onAirportSelected(iataCode: String) {
         _searchQuery.value = iataCode
         _selectedAirportCode.value = iataCode
         _searchExpanded.value = false
     }
 
-    fun favoriteButton(it: Boolean): Boolean {
-        return it
-    }
+
 
 
     companion object {
