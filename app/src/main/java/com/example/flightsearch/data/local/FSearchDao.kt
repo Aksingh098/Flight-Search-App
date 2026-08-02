@@ -32,4 +32,7 @@ interface FSearchDao {
 
     @Query("DELETE FROM favorite WHERE departure_code = :departureCode AND destination_code = :destinationCode")
     suspend fun deleteFavorite(departureCode: String, destinationCode: String)
+
+    @Query("SELECT * FROM airport")
+    fun getAirports(): Flow<List<AirportEntity>>
 }

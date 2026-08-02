@@ -15,8 +15,6 @@ data class FlightRoute(
     val isFavorite: Boolean = false
 )
 
-data class Favorite(
-    val id: Int,
-    val departureCode: String,
-    val destinationCode: String
-)
+
+
+

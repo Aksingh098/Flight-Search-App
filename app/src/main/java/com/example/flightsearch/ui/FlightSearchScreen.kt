@@ -1,5 +1,6 @@
 package com.example.flightsearch.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,6 +49,10 @@ fun FlightSearchScreen(
     viewModel: FlightSearchViewModel = viewModel(factory = FlightSearchViewModel.Factory)
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    BackHandler(enabled = uiState.hasExecutedSearch) {
+        viewModel.clearSearch()
+    }
     Column(
         modifier = modifier
     ) {
@@ -143,6 +148,25 @@ fun FlightSearchScreen(
             }
 
 
+        }else{
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+                items(uiState.favorites) { favorite ->
+                    AirportCard(
+                        destinationName = favorite.destinationName,
+                        departureName = favorite.departureName,
+                        destinationCode = favorite.destinationCode,
+                        departureCode = favorite.departureCode,
+                        isFilled = favorite.isFavorite,
+                        onFavoriteClick = viewModel::onFavoriteClick
+
+
+                    )
+
+                }
+            }
         }
 
         }

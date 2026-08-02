@@ -21,4 +21,6 @@ class OfflineFSearchRepository(private val searchDao: FSearchDao) : FSearchRepos
 
     override suspend fun deleteFavorite(departureCode: String, destinationCode: String) =
         searchDao.deleteFavorite(departureCode, destinationCode)
+
+    override fun getAirports(): Flow<List<AirportEntity>> = searchDao.getAirports()
 }

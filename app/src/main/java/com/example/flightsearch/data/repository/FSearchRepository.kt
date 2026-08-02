@@ -15,4 +15,6 @@ interface FSearchRepository {
     suspend fun addFavorite(favorite: FavoriteEntity)
 
     suspend fun deleteFavorite(departureCode: String, destinationCode: String)
+
+    fun getAirports(): Flow<List<AirportEntity>>
 }
