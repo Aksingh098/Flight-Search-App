@@ -9,6 +9,11 @@ An Android app for searching airports and browsing possible flight routes, built
 - **Favorites** — mark/unmark routes as favorites; favorite status persists and is reflected instantly across the UI.
 - **Offline-first** — all data is served from a local, pre-populated Room database (no network calls).
 
+## Screenshots
+
+| Search | Suggestions | Flight Results |
+|---|---|---|
+| <img src="https://github.com/user-attachments/assets/9349afb0-fb20-4b91-a7e6-c3197ce475a3" width="220"> | <img src="https://github.com/user-attachments/assets/6bf38838-a960-4430-ae86-817e6d7e1039" width="220"> | <img src="https://github.com/user-attachments/assets/871ee37d-0911-446a-a0f5-f544624dcc63" width="220"> |
 ## Tech Stack
 
 - **Kotlin**
